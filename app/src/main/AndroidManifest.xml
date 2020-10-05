@@ -3,7 +3,7 @@
     package="com.faridnia.cafe.bazaar.weatherforcast">
 
     <application
-        android:name=".di.WeatherForecastApplication"
+        android:name=".WeatherForecastApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"

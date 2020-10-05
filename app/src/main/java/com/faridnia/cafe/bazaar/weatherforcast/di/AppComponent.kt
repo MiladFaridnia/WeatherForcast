@@ -1,6 +1,7 @@
 package com.faridnia.cafe.bazaar.weatherforcast.di
 
 import android.app.Application
+import com.faridnia.cafe.bazaar.weatherforcast.WeatherForecastApplication
 
 import dagger.BindsInstance
 import dagger.Component
