@@ -67,7 +67,7 @@ class ForecastResultModelImpl @Inject constructor(
         callback: RequestCompleteListener<ForecastResult>
     ) {
 
-        val call: Call<ForecastResult> = apiInterface.getWeatherInfo(cityId)
+        val call: Call<ForecastResult> = apiInterface.getWeatherForecast(cityId)
 
         call.enqueue(object : Callback<ForecastResult> {
 

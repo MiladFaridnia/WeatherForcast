@@ -9,11 +9,9 @@ import retrofit2.http.Query
 interface ApiInterface {
 
     @GET("forecast")
-    fun getWeatherInfo(@Query("id") cityId: Int): Call<ForecastResult>
+    fun getWeatherForecast(@Query("id") cityId: Int): Call<ForecastResult>
 
     @GET("not_found_yet")
     fun getCities(@Query("countryCode") countryCode: String): Call<List<City>>
-
-
 
 }
