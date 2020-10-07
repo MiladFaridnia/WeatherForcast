@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Weather Forcast</string>
+    <string name="centigrade">C</string>
+    <string name="weatherIcon">Weather</string>
 </resources>
