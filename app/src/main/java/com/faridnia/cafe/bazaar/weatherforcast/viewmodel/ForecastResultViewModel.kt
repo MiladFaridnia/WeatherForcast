@@ -1,5 +1,6 @@
 package com.faridnia.cafe.bazaar.weatherforcast.viewmodel
 
+import android.util.Log
 import com.faridnia.cafe.bazaar.weatherforcast.model.City
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,8 +12,8 @@ class ForecastResultViewModel @Inject constructor(var model: ForecastResultModel
 
     val cityListLiveData = MutableLiveData<MutableList<City>>()
     val cityListFailureLiveData = MutableLiveData<String>()
-    val weatherInfoLiveData = MutableLiveData<ForecastResult>()
-    val weatherInfoFailureLiveData = MutableLiveData<String>()
+    val forecastResultLiveData = MutableLiveData<ForecastResult>()
+    val forecastResultFailureLiveData = MutableLiveData<String>()
     val progressBarLiveData = MutableLiveData<Boolean>()
 
     fun getCityList() {
@@ -35,17 +36,18 @@ class ForecastResultViewModel @Inject constructor(var model: ForecastResultModel
         model.getWeatherForecast(cityId, object :
             RequestCompleteListener<ForecastResult> {
             override fun onRequestSuccess(data: ForecastResult) {
+                Log.d("Milad", "onRequestSuccess: $data")
 
                 progressBarLiveData.postValue(false)
 
-                weatherInfoLiveData.postValue(data)
+                forecastResultLiveData.postValue(data)
             }
 
             override fun onRequestFailed(errorMessage: String) {
-
+                Log.d("Milad", "onRequestFailed: $errorMessage")
                 progressBarLiveData.postValue(false)
 
-                weatherInfoFailureLiveData.postValue(errorMessage)
+                forecastResultFailureLiveData.postValue(errorMessage)
             }
         })
     }
