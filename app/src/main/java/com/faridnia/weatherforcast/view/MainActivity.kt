@@ -27,6 +27,8 @@ class MainActivity : DaggerAppCompatActivity() {
 
         observeWeatherData()
 
+        viewModel.getWeatherInfo(47.159401,34.330502)//TODO Sample Data
+
     }
 
     private fun observeCityData() {
