@@ -1,4 +1,4 @@
-package com.faridnia.weatherforcast.model
+package com.faridnia.weatherforcast.model.forcastresponse
 
 data class ForecastResult(
     val city: City,

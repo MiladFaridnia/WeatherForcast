@@ -1,8 +1,9 @@
 package com.faridnia.weatherforcast.viewmodel
 
 import android.content.Context
-import com.faridnia.weatherforcast.model.City
-import com.faridnia.weatherforcast.model.ForecastResult
+import com.faridnia.weatherforcast.model.forcastresponse.City
+import com.faridnia.weatherforcast.model.forcastresponse.ForecastResult
+import com.faridnia.weatherforcast.model.onecallresponse.WeatherInfo
 import com.faridnia.weatherforcast.network.ApiInterface
 import com.faridnia.weatherforcast.network.RequestCompleteListener
 import com.google.gson.GsonBuilder
@@ -86,4 +87,33 @@ class ForecastResultModelImpl @Inject constructor(
             }
         })
     }
+
+    override fun getWeatherInfo(
+        latitude: Double,
+        longitude: Double,
+        callback: RequestCompleteListener<WeatherInfo>
+    ) {
+
+        val call: Call<WeatherInfo> =
+            apiInterface.getWeatherInfoOneCall(lat = latitude, lon = longitude)
+
+        call.enqueue(object : Callback<WeatherInfo> {
+
+            override fun onResponse(
+                call: Call<WeatherInfo>,
+                response: Response<WeatherInfo>
+            ) {
+                if (response.body() != null)
+                    callback.onRequestSuccess(requireNotNull(response.body()))
+                else
+                    callback.onRequestFailed(response.message())
+            }
+
+            override fun onFailure(call: Call<WeatherInfo>, t: Throwable) {
+                callback.onRequestFailed(requireNotNull(t.localizedMessage))
+            }
+        })
+    }
+
+
 }
