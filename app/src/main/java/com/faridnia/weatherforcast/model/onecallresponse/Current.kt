@@ -7,7 +7,7 @@ data class Current(
     val clouds: Int,
     @SerializedName("dew_point")
     val dewPoint: Double,
-    val dt: Int,
+    val dt: Long,
     @SerializedName("feels_like")
     val feelsLike: Double,
     val humidity: Int,

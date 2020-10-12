@@ -2,12 +2,13 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainActivityContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.faridnia.weatherforcast.view.MainActivity">
 
     <include
-        android:id="@+id/layout_weather_basic"
+        android:id="@+id/layoutWeatherBasic"
         layout="@layout/city_temp_info_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -23,7 +24,7 @@
         android:layout_marginEnd="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layout_weather_basic">
+        app:layout_constraintTop_toBottomOf="@id/layoutWeatherBasic">
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

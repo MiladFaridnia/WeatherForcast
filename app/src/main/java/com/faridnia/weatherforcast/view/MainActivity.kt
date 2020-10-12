@@ -6,9 +6,13 @@ import android.util.Log
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.faridnia.weatherforcast.R
+import com.faridnia.weatherforcast.R.drawable.*
+import com.faridnia.weatherforcast.model.DayTimes
 import com.faridnia.weatherforcast.model.WeatherConditions
+import com.faridnia.weatherforcast.util.Utils
 import com.faridnia.weatherforcast.viewmodel.ForecastResultViewModel
 import com.faridnia.weatherforcast.viewmodel.ForecastResultViewModelFactory
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.city_temp_info_layout.*
 import javax.inject.Inject
 
@@ -27,6 +31,7 @@ class MainActivity : DaggerAppCompatActivity() {
 
         viewModel = ViewModelProvider(this, factory).get(ForecastResultViewModel::class.java)
 
+
         observeCityData()
 
         observeWeatherData()
@@ -34,6 +39,7 @@ class MainActivity : DaggerAppCompatActivity() {
         viewModel.getWeatherInfo(47.159401, 34.330502)//TODO Sample Data
 
     }
+
 
     private fun observeCityData() {
         viewModel.cityListLiveData.observe(this, Observer {
@@ -45,58 +51,110 @@ class MainActivity : DaggerAppCompatActivity() {
         viewModel.weatherInfoLiveData.observe(this, Observer { weatherInfo ->
             Log.d("Milad", "result : " + weatherInfo.current)
 
-            val cityTemperature = weatherInfo.current.temp
+            setMainBackground(weatherInfo.current.dt)
 
-            val cityMinMaxTemperature = weatherInfo.current.dewPoint
+            showTemperatureInfo(
+                weatherInfo.current.temp,
+                weatherInfo.current.dewPoint,
+                selectedCityName,
+                weatherInfo.current.weather[0].description,
+                Utils().getDayTime(weatherInfo.current.dt)
+            )
 
-            val cityName = selectedCityName
-
-                val cityWeather = weatherInfo.current.weather[0].main
-            showTemperatureInfo(cityTemperature, cityMinMaxTemperature, cityName, cityWeather)
 
         })
+    }
+
+    private fun setMainBackground(dt: Long) {
+        when (Utils().getDayTime(dt)) {
+            DayTimes.Dawn -> {
+                mainActivityContainer.background = getDrawable(dawn_background)
+            }
+            DayTimes.Morning -> {
+                mainActivityContainer.background = getDrawable(morning_background)
+            }
+            DayTimes.Noon -> {
+                mainActivityContainer.background = getDrawable(noon_background)
+            }
+            DayTimes.Evening -> {
+                mainActivityContainer.background = getDrawable(evening_background)
+            }
+            DayTimes.Night -> {
+                mainActivityContainer.background = getDrawable(night_background)
+            }
+            else -> {
+                mainActivityContainer.background = getDrawable(morning_background)
+            }
+        }
     }
 
     private fun showTemperatureInfo(
         cityTemperature: Double,
         cityMinMaxTemperature: Double,
         cityName: String,
-        cityWeather: String
+        cityWeather: String,
+        dayTime: DayTimes
     ) {
         cityNameTextView.text = cityName
         cityTemperatureTextView.text = cityTemperature.toString()
         cityMinMaxTempTextView.text = cityMinMaxTemperature.toString()
         when (cityWeather) {
             WeatherConditions.Clear.name -> {
-                cityWeatherImageView.setImageResource(R.drawable.ic_0_clear_sky_morning)
+                setClearWeatherBackground(dayTime)
             }
             WeatherConditions.BrokenClouds.name -> {
-                cityWeatherImageView.setImageResource(R.drawable.ic_0_broken_cloud)
+                cityWeatherImageView.setImageResource(ic_0_broken_cloud)
             }
             WeatherConditions.FewClouds.name -> {
-                cityWeatherImageView.setImageResource(R.drawable.ic_0_few_cloud_dawn)
+                setFeaCloudsBackground(dayTime)
             }
             WeatherConditions.Mist.name -> {
-                cityWeatherImageView.setImageResource(R.drawable.ic_0_mist)
+                cityWeatherImageView.setImageResource(ic_0_mist)
             }
             WeatherConditions.Rain.name -> {
-                cityWeatherImageView.setImageResource(R.drawable.ic_0_rain)
+                cityWeatherImageView.setImageResource(ic_0_rain)
             }
             WeatherConditions.ScatteredClouds.name -> {
-                cityWeatherImageView.setImageResource(R.drawable.ic_0_scattered_clouds)
+                cityWeatherImageView.setImageResource(ic_0_scattered_clouds)
             }
             WeatherConditions.ShowerRain.name -> {
-                cityWeatherImageView.setImageResource(R.drawable.ic_0_shower_raint)
+                cityWeatherImageView.setImageResource(ic_0_shower_raint)
             }
             WeatherConditions.Thunderstorm.name -> {
-                cityWeatherImageView.setImageResource(R.drawable.ic_0__thunderstorm)
+                cityWeatherImageView.setImageResource(ic_0__thunderstorm)
             }
             WeatherConditions.Snow.name -> {
-                cityWeatherImageView.setImageResource(R.drawable.ic_0_snow)
+                cityWeatherImageView.setImageResource(ic_0_snow)
             }
             else -> {
-                cityWeatherImageView.setImageResource(R.drawable.ic_0_clear_sky_morning)
+                cityWeatherImageView.setImageResource(ic_0_clear_sky_morning)
             }
+        }
+    }
+
+    private fun setFeaCloudsBackground(dayTime: DayTimes) {
+        if (dayTime == DayTimes.Dawn) {
+            cityWeatherImageView.setImageResource(ic_0_few_cloud_dawn)
+        } else if (dayTime == DayTimes.Morning || dayTime == DayTimes.Noon) {
+            cityWeatherImageView.setImageResource(ic_0_few_cloud_morning)
+        } else if (dayTime == DayTimes.Evening || dayTime == DayTimes.Night) {
+            cityWeatherImageView.setImageResource(ic_0_few_cloud_evening)
+        } else {
+            cityWeatherImageView.setImageResource(ic_0_clear_sky_morning)
+        }
+    }
+
+    private fun setClearWeatherBackground(dayTime: DayTimes) {
+        if (dayTime == DayTimes.Dawn) {
+            cityWeatherImageView.setImageResource(ic_0_clear_sky_dawn)
+        } else if (dayTime == DayTimes.Morning || dayTime == DayTimes.Noon) {
+            cityWeatherImageView.setImageResource(ic_0_clear_sky_morning)
+        } else if (dayTime == DayTimes.Evening) {
+            cityWeatherImageView.setImageResource(ic_0_clear_sky_evening)
+        } else if (dayTime == DayTimes.Night) {
+            cityWeatherImageView.setImageResource(ic_0_clear_sky_night)
+        } else {
+            cityWeatherImageView.setImageResource(ic_0_clear_sky_morning)
         }
     }
 }
