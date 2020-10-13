@@ -111,21 +111,27 @@ class MainActivity : DaggerAppCompatActivity() {
         when (Utils().getDayTime(dt)) {
             DayTimes.Dawn -> {
                 mainActivityContainer.background = getDrawable(dawn_background)
+                window.statusBarColor = resources.getColor(R.color.dawnTopGradientColor)
             }
             DayTimes.Morning -> {
                 mainActivityContainer.background = getDrawable(morning_background)
+                window.statusBarColor = resources.getColor(R.color.morningTopGradientColor)
             }
             DayTimes.Noon -> {
                 mainActivityContainer.background = getDrawable(noon_background)
+                window.statusBarColor = resources.getColor(R.color.noonTopGradientColor)
             }
             DayTimes.Evening -> {
                 mainActivityContainer.background = getDrawable(evening_background)
+                window.statusBarColor = resources.getColor(R.color.eveningTopGradientColor)
             }
             DayTimes.Night -> {
                 mainActivityContainer.background = getDrawable(night_background)
+                window.statusBarColor = resources.getColor(R.color.nightTopGradientColor)
             }
             else -> {
                 mainActivityContainer.background = getDrawable(morning_background)
+                window.statusBarColor = resources.getColor(R.color.morningTopGradientColor)
             }
         }
     }
