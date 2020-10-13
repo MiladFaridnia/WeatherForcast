@@ -2,12 +2,13 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainActivityContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.faridnia.weatherforcast.view.MainActivity">
 
     <include
-        android:id="@+id/layout_weather_basic"
+        android:id="@+id/layoutWeatherBasic"
         layout="@layout/city_temp_info_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,32 +16,28 @@
         android:layout_marginEnd="-15dp"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layout_weather_next_hours"
+    <LinearLayout
+        android:id="@+id/layoutWeatherNextHours"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="100dp"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
+        android:gravity="center"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layout_weather_basic">
+        app:layout_constraintTop_toBottomOf="@id/layoutWeatherBasic" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <ScrollView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layout_weather_next_hours">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </ScrollView>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layoutWeatherNextHours" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

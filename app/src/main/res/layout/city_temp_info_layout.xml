@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:textColor="@color/primaryTextColor"
-        android:textSize="65sp"
+        android:textSize="45sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -20,7 +20,7 @@
         android:layout_marginTop="30dp"
         android:text="@string/centigrade"
         android:textColor="@color/primaryTextColor"
-        android:textSize="30sp"
+        android:textSize="35sp"
         app:layout_constraintStart_toEndOf="@id/cityTemperatureTextView"
         app:layout_constraintTop_toTopOf="parent" />
 
