@@ -24,7 +24,7 @@ import javax.inject.Inject
 
 class MainActivity : DaggerAppCompatActivity() {
 
-    private val selectedCityName: String = "Tehran"
+    private val selectedCityName: String = "Shahrud"
     private lateinit var weatherAdapter: WeatherForecastAdapter
 
     @Inject
@@ -42,7 +42,7 @@ class MainActivity : DaggerAppCompatActivity() {
 
         observeWeatherData()
 
-        viewModel.getWeatherInfo(47.159401, 34.330502)//TODO Sample Data
+        viewModel.getWeatherInfo(55.01667, 36.416672)//TODO Sample Data Ḩeşār-e Sefīd
 
     }
 
