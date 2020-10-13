@@ -8,9 +8,9 @@
         android:id="@+id/cityTemperatureTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="50dp"
         android:textColor="@color/primaryTextColor"
-        android:textSize="45sp"
+        android:textSize="50sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -20,7 +20,7 @@
         android:layout_marginTop="30dp"
         android:text="@string/centigrade"
         android:textColor="@color/primaryTextColor"
-        android:textSize="35sp"
+        android:textSize="40sp"
         app:layout_constraintStart_toEndOf="@id/cityTemperatureTextView"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -48,13 +48,14 @@
         android:id="@+id/cityNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="50dp"
         android:background="@drawable/text_view_round_corner_background"
         android:drawableStart="@drawable/ic_pin"
         android:drawablePadding="5dp"
         android:paddingStart="8dp"
         android:paddingTop="5dp"
         android:paddingEnd="8dp"
+        android:textSize="20sp"
         android:paddingBottom="5dp"
         android:textColor="@color/primaryTextColor"
         app:layout_constraintStart_toStartOf="parent"
