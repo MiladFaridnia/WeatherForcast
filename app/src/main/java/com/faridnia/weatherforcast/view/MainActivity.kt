@@ -5,10 +5,14 @@ import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.faridnia.weatherforcast.R
 import com.faridnia.weatherforcast.R.drawable.*
 import com.faridnia.weatherforcast.model.DayTimes
 import com.faridnia.weatherforcast.model.WeatherConditions
+import com.faridnia.weatherforcast.model.onecallresponse.Daily
 import com.faridnia.weatherforcast.model.onecallresponse.Hourly
 import com.faridnia.weatherforcast.model.onecallresponse.WeatherInfo
 import com.faridnia.weatherforcast.util.Utils
@@ -21,6 +25,7 @@ import javax.inject.Inject
 class MainActivity : DaggerAppCompatActivity() {
 
     private val selectedCityName: String = "Tehran"
+    private lateinit var weatherAdapter: WeatherForecastAdapter
 
     @Inject
     lateinit var factory: ForecastResultViewModelFactory
@@ -31,8 +36,7 @@ class MainActivity : DaggerAppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        viewModel = ViewModelProvider(this, factory).get(ForecastResultViewModel::class.java)
-
+        initViewModel()
 
         observeCityData()
 
@@ -42,6 +46,9 @@ class MainActivity : DaggerAppCompatActivity() {
 
     }
 
+    private fun initViewModel() {
+        viewModel = ViewModelProvider(this, factory).get(ForecastResultViewModel::class.java)
+    }
 
     private fun observeCityData() {
         viewModel.cityListLiveData.observe(this, Observer {
@@ -65,7 +72,23 @@ class MainActivity : DaggerAppCompatActivity() {
 
             showNextHours(weatherInfo.hourly)
 
+            showNextDays(weatherInfo.daily)
         })
+    }
+
+    private fun showNextDays(daily: List<Daily>) {
+        val dailyList = daily.subList(1, daily.size)
+        val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
+        weatherAdapter = WeatherForecastAdapter(dailyList)
+        val layoutManager = LinearLayoutManager(applicationContext)
+        recyclerView.layoutManager = layoutManager
+        recyclerView.itemAnimator = DefaultItemAnimator()
+        recyclerView.adapter = weatherAdapter
+        weatherAdapter.notifyDataSetChanged()
+
+        weatherAdapter.onItemClick = { daily ->
+            Log.d("Milad", daily.toString())
+        }
     }
 
     private fun getMinMaxTemperature(weatherInfo: WeatherInfo) =
@@ -152,28 +175,39 @@ class MainActivity : DaggerAppCompatActivity() {
     }
 
     private fun setFeaCloudsBackground(dayTime: DayTimes) {
-        if (dayTime == DayTimes.Dawn) {
-            cityWeatherImageView.setImageResource(ic_0_few_cloud_dawn)
-        } else if (dayTime == DayTimes.Morning || dayTime == DayTimes.Noon) {
-            cityWeatherImageView.setImageResource(ic_0_few_cloud_morning)
-        } else if (dayTime == DayTimes.Evening || dayTime == DayTimes.Night) {
-            cityWeatherImageView.setImageResource(ic_0_few_cloud_evening)
-        } else {
-            cityWeatherImageView.setImageResource(ic_0_clear_sky_morning)
+        when (dayTime) {
+            DayTimes.Dawn -> {
+                cityWeatherImageView.setImageResource(ic_0_few_cloud_dawn)
+            }
+            DayTimes.Morning, DayTimes.Noon -> {
+                cityWeatherImageView.setImageResource(ic_0_few_cloud_morning)
+            }
+            DayTimes.Evening, DayTimes.Night -> {
+                cityWeatherImageView.setImageResource(ic_0_few_cloud_evening)
+            }
+            else -> {
+                cityWeatherImageView.setImageResource(ic_0_clear_sky_morning)
+            }
         }
     }
 
     private fun setClearWeatherBackground(dayTime: DayTimes) {
-        if (dayTime == DayTimes.Dawn) {
-            cityWeatherImageView.setImageResource(ic_0_clear_sky_dawn)
-        } else if (dayTime == DayTimes.Morning || dayTime == DayTimes.Noon) {
-            cityWeatherImageView.setImageResource(ic_0_clear_sky_morning)
-        } else if (dayTime == DayTimes.Evening) {
-            cityWeatherImageView.setImageResource(ic_0_clear_sky_evening)
-        } else if (dayTime == DayTimes.Night) {
-            cityWeatherImageView.setImageResource(ic_0_clear_sky_night)
-        } else {
-            cityWeatherImageView.setImageResource(ic_0_clear_sky_morning)
+        when (dayTime) {
+            DayTimes.Dawn -> {
+                cityWeatherImageView.setImageResource(ic_0_clear_sky_dawn)
+            }
+            DayTimes.Morning, DayTimes.Noon -> {
+                cityWeatherImageView.setImageResource(ic_0_clear_sky_morning)
+            }
+            DayTimes.Evening -> {
+                cityWeatherImageView.setImageResource(ic_0_clear_sky_evening)
+            }
+            DayTimes.Night -> {
+                cityWeatherImageView.setImageResource(ic_0_clear_sky_night)
+            }
+            else -> {
+                cityWeatherImageView.setImageResource(ic_0_clear_sky_morning)
+            }
         }
     }
 }
