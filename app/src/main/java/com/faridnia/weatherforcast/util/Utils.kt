@@ -1,6 +1,7 @@
 package com.faridnia.weatherforcast.util
 
 import com.faridnia.weatherforcast.model.DayTimes
+import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -27,5 +28,18 @@ class Utils {
         }
     }
 
+    fun getTemperature(temp: Double): String {
+        return (temp - 273).toInt().toString()
+    }
 
+    fun getHourFromDate(s: Long): String? {
+        return try {
+            val sdf = SimpleDateFormat("HH", Locale("IR"))
+            val netDate = Date(s * 1000)
+            sdf.format(netDate)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            ""
+        }
+    }
 }

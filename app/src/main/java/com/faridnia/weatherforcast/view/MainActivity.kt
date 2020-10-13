@@ -9,6 +9,8 @@ import com.faridnia.weatherforcast.R
 import com.faridnia.weatherforcast.R.drawable.*
 import com.faridnia.weatherforcast.model.DayTimes
 import com.faridnia.weatherforcast.model.WeatherConditions
+import com.faridnia.weatherforcast.model.onecallresponse.Hourly
+import com.faridnia.weatherforcast.model.onecallresponse.WeatherInfo
 import com.faridnia.weatherforcast.util.Utils
 import com.faridnia.weatherforcast.viewmodel.ForecastResultViewModel
 import com.faridnia.weatherforcast.viewmodel.ForecastResultViewModelFactory
@@ -55,14 +57,31 @@ class MainActivity : DaggerAppCompatActivity() {
 
             showTemperatureInfo(
                 weatherInfo.current.temp,
-                weatherInfo.current.dewPoint,
+                getMinMaxTemperature(weatherInfo),
                 selectedCityName,
                 weatherInfo.current.weather[0].description,
                 Utils().getDayTime(weatherInfo.current.dt)
             )
 
+            showNextHours(weatherInfo.hourly)
 
         })
+    }
+
+    private fun getMinMaxTemperature(weatherInfo: WeatherInfo) =
+        Utils().getTemperature(weatherInfo.daily[0].temp.min) + "/"+
+                Utils().getTemperature(weatherInfo.daily[0].temp.max)
+
+    private fun showNextHours(hours: List<Hourly>) {
+        var i = 0
+        for (hour in hours) {
+            if (i <  7) {
+                val layout = NextHourWeatherLayout(this)
+                layout.setNextHourData(hour)
+                layoutWeatherNextHours.addView(layout)
+                i += 1
+            }
+        }
     }
 
     private fun setMainBackground(dt: Long) {
@@ -90,13 +109,13 @@ class MainActivity : DaggerAppCompatActivity() {
 
     private fun showTemperatureInfo(
         cityTemperature: Double,
-        cityMinMaxTemperature: Double,
+        cityMinMaxTemperature: String,
         cityName: String,
         cityWeather: String,
         dayTime: DayTimes
     ) {
         cityNameTextView.text = cityName
-        cityTemperatureTextView.text = cityTemperature.toString()
+        cityTemperatureTextView.text = Utils().getTemperature(cityTemperature)
         cityMinMaxTempTextView.text = cityMinMaxTemperature.toString()
         when (cityWeather) {
             WeatherConditions.Clear.name -> {
