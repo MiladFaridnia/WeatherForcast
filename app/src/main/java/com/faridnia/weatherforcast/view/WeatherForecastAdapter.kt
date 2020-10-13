@@ -11,7 +11,6 @@ import com.faridnia.weatherforcast.model.DayTimes
 import com.faridnia.weatherforcast.model.WeatherConditions
 import com.faridnia.weatherforcast.model.onecallresponse.Daily
 import com.faridnia.weatherforcast.util.Utils
-import kotlinx.android.synthetic.main.city_temp_info_layout.*
 import kotlinx.android.synthetic.main.city_temp_next_days_layout.view.*
 
 class WeatherForecastAdapter(private var dailyList: List<Daily>) :
@@ -48,86 +47,11 @@ class WeatherForecastAdapter(private var dailyList: List<Daily>) :
 
 
         holder.dayItemWeatherImageView.setImageResource(
-            getRelatedWeatherImage(
+            Utils().getRelatedWeatherImage(
                 dailyList[position].weather[0].description,
                 Utils().getDayTime(dailyList[position].dt)
             )
         )
-    }
-
-    private fun getRelatedWeatherImage(
-        description: String,
-        dayTime: DayTimes
-    ): Int {
-        return when (description) {
-            WeatherConditions.Clear.name -> {
-                getClearWeatherBackground(dayTime)
-            }
-            WeatherConditions.BrokenClouds.name -> {
-                R.drawable.ic_0_broken_cloud
-            }
-            WeatherConditions.FewClouds.name -> {
-                getFeaCloudsBackground(dayTime)
-            }
-            WeatherConditions.Mist.name -> {
-                R.drawable.ic_0_mist
-            }
-            WeatherConditions.Rain.name -> {
-                R.drawable.ic_0_rain
-            }
-            WeatherConditions.ScatteredClouds.name -> {
-                R.drawable.ic_0_scattered_clouds
-            }
-            WeatherConditions.ShowerRain.name -> {
-                R.drawable.ic_0_shower_raint
-            }
-            WeatherConditions.Thunderstorm.name -> {
-                R.drawable.ic_0__thunderstorm
-            }
-            WeatherConditions.Snow.name -> {
-                R.drawable.ic_0_snow
-            }
-            else -> {
-                R.drawable.ic_0_clear_sky_morning
-            }
-        }
-    }
-
-    private fun getFeaCloudsBackground(dayTime: DayTimes): Int {
-        return when (dayTime) {
-            DayTimes.Dawn -> {
-                R.drawable.ic_0_few_cloud_dawn
-            }
-            DayTimes.Morning, DayTimes.Noon -> {
-                R.drawable.ic_0_few_cloud_morning
-            }
-            DayTimes.Evening, DayTimes.Night -> {
-                R.drawable.ic_0_few_cloud_evening
-            }
-            else -> {
-                R.drawable.ic_0_clear_sky_morning
-            }
-        }
-    }
-
-    private fun getClearWeatherBackground(dayTime: DayTimes): Int {
-        return when (dayTime) {
-            DayTimes.Dawn -> {
-                R.drawable.ic_0_clear_sky_dawn
-            }
-            DayTimes.Morning, DayTimes.Noon -> {
-                R.drawable.ic_0_clear_sky_morning
-            }
-            DayTimes.Evening -> {
-                R.drawable.ic_0_clear_sky_evening
-            }
-            DayTimes.Night -> {
-                R.drawable.ic_0_clear_sky_night
-            }
-            else -> {
-                R.drawable.ic_0_clear_sky_morning
-            }
-        }
     }
 
     private fun getMinMaxTemperature(min: Double, max: Double) =

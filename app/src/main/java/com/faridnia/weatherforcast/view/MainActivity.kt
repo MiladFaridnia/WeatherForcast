@@ -24,7 +24,7 @@ import javax.inject.Inject
 
 class MainActivity : DaggerAppCompatActivity() {
 
-    private val selectedCityName: String = "Tehran"
+    private val selectedCityName: String = "Shahrud"
     private lateinit var weatherAdapter: WeatherForecastAdapter
 
     @Inject
@@ -42,7 +42,7 @@ class MainActivity : DaggerAppCompatActivity() {
 
         observeWeatherData()
 
-        viewModel.getWeatherInfo(47.159401, 34.330502)//TODO Sample Data
+        viewModel.getWeatherInfo(55.01667, 36.416672)//TODO Sample Data Ḩeşār-e Sefīd
 
     }
 
@@ -111,21 +111,27 @@ class MainActivity : DaggerAppCompatActivity() {
         when (Utils().getDayTime(dt)) {
             DayTimes.Dawn -> {
                 mainActivityContainer.background = getDrawable(dawn_background)
+                window.statusBarColor = resources.getColor(R.color.dawnTopGradientColor)
             }
             DayTimes.Morning -> {
                 mainActivityContainer.background = getDrawable(morning_background)
+                window.statusBarColor = resources.getColor(R.color.morningTopGradientColor)
             }
             DayTimes.Noon -> {
                 mainActivityContainer.background = getDrawable(noon_background)
+                window.statusBarColor = resources.getColor(R.color.noonTopGradientColor)
             }
             DayTimes.Evening -> {
                 mainActivityContainer.background = getDrawable(evening_background)
+                window.statusBarColor = resources.getColor(R.color.eveningTopGradientColor)
             }
             DayTimes.Night -> {
                 mainActivityContainer.background = getDrawable(night_background)
+                window.statusBarColor = resources.getColor(R.color.nightTopGradientColor)
             }
             else -> {
                 mainActivityContainer.background = getDrawable(morning_background)
+                window.statusBarColor = resources.getColor(R.color.morningTopGradientColor)
             }
         }
     }
@@ -140,74 +146,6 @@ class MainActivity : DaggerAppCompatActivity() {
         cityNameTextView.text = cityName
         cityTemperatureTextView.text = Utils().getTemperature(cityTemperature)
         cityMinMaxTempTextView.text = cityMinMaxTemperature.toString()
-        when (cityWeather) {
-            WeatherConditions.Clear.name -> {
-                setClearWeatherBackground(dayTime)
-            }
-            WeatherConditions.BrokenClouds.name -> {
-                cityWeatherImageView.setImageResource(ic_0_broken_cloud)
-            }
-            WeatherConditions.FewClouds.name -> {
-                setFeaCloudsBackground(dayTime)
-            }
-            WeatherConditions.Mist.name -> {
-                cityWeatherImageView.setImageResource(ic_0_mist)
-            }
-            WeatherConditions.Rain.name -> {
-                cityWeatherImageView.setImageResource(ic_0_rain)
-            }
-            WeatherConditions.ScatteredClouds.name -> {
-                cityWeatherImageView.setImageResource(ic_0_scattered_clouds)
-            }
-            WeatherConditions.ShowerRain.name -> {
-                cityWeatherImageView.setImageResource(ic_0_shower_raint)
-            }
-            WeatherConditions.Thunderstorm.name -> {
-                cityWeatherImageView.setImageResource(ic_0__thunderstorm)
-            }
-            WeatherConditions.Snow.name -> {
-                cityWeatherImageView.setImageResource(ic_0_snow)
-            }
-            else -> {
-                cityWeatherImageView.setImageResource(ic_0_clear_sky_morning)
-            }
-        }
-    }
-
-    private fun setFeaCloudsBackground(dayTime: DayTimes) {
-        when (dayTime) {
-            DayTimes.Dawn -> {
-                cityWeatherImageView.setImageResource(ic_0_few_cloud_dawn)
-            }
-            DayTimes.Morning, DayTimes.Noon -> {
-                cityWeatherImageView.setImageResource(ic_0_few_cloud_morning)
-            }
-            DayTimes.Evening, DayTimes.Night -> {
-                cityWeatherImageView.setImageResource(ic_0_few_cloud_evening)
-            }
-            else -> {
-                cityWeatherImageView.setImageResource(ic_0_clear_sky_morning)
-            }
-        }
-    }
-
-    private fun setClearWeatherBackground(dayTime: DayTimes) {
-        when (dayTime) {
-            DayTimes.Dawn -> {
-                cityWeatherImageView.setImageResource(ic_0_clear_sky_dawn)
-            }
-            DayTimes.Morning, DayTimes.Noon -> {
-                cityWeatherImageView.setImageResource(ic_0_clear_sky_morning)
-            }
-            DayTimes.Evening -> {
-                cityWeatherImageView.setImageResource(ic_0_clear_sky_evening)
-            }
-            DayTimes.Night -> {
-                cityWeatherImageView.setImageResource(ic_0_clear_sky_night)
-            }
-            else -> {
-                cityWeatherImageView.setImageResource(ic_0_clear_sky_morning)
-            }
-        }
+        cityWeatherImageView.setImageResource(Utils().getRelatedWeatherImage(cityWeather,dayTime))
     }
 }
