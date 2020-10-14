@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.faridnia.weatherforcast.R
 import com.faridnia.weatherforcast.R.drawable.*
 import com.faridnia.weatherforcast.model.DayTimes
+import com.faridnia.weatherforcast.model.forcastresponse.City
+import com.faridnia.weatherforcast.model.forcastresponse.Coord
 import com.faridnia.weatherforcast.model.onecallresponse.Daily
 import com.faridnia.weatherforcast.model.onecallresponse.Hourly
 import com.faridnia.weatherforcast.model.onecallresponse.WeatherInfo
@@ -26,16 +28,13 @@ import javax.inject.Inject
 
 class MainActivity : DaggerAppCompatActivity() {
 
-    private var selectedCityName: String = "Tehran"
+    private var selectedCity = City(Coord(51.421509, 35.694389), "IR", 112931, "Tehran")
     private lateinit var weatherAdapter: WeatherForecastAdapter
 
     @Inject
     lateinit var factory: ForecastResultViewModelFactory
 
     private lateinit var viewModel: ForecastResultViewModel
-
-    private val defaultCityLat = 51.421509
-    private val defaultCityLng = 35.694389
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +45,7 @@ class MainActivity : DaggerAppCompatActivity() {
 
         getCityList()
 
-        getWeatherInfo(defaultCityLat, defaultCityLng)
+        getWeatherInfo(selectedCity.coord.lat, selectedCity.coord.lon)
 
         observeCityData()
 
@@ -83,8 +82,8 @@ class MainActivity : DaggerAppCompatActivity() {
         citiesRecyclerView.adapter = cityListAdapter
 
         cityListAdapter.onItemClick = { city ->
-            getWeatherInfo(city.coord.lat , city.coord.lon)
-            selectedCityName = city.name
+            getWeatherInfo(city.coord.lat, city.coord.lon)
+            selectedCity = city
             bottomSheetDialog.dismiss()
         }
     }
@@ -103,21 +102,18 @@ class MainActivity : DaggerAppCompatActivity() {
 
     private fun observeCityData() {
         viewModel.cityListLiveData.observe(this, Observer {
-            Log.d("Milad", "Cities: $it")
             cityListAdapter.update(it)
         })
     }
 
     private fun observeWeatherData() {
         viewModel.weatherInfoLiveData.observe(this, Observer { weatherInfo ->
-            Log.d("Milad", "result : " + weatherInfo.current)
-
             setMainBackground(weatherInfo.current.dt)
 
             showTemperatureInfo(
                 weatherInfo.current.temp,
                 getMinMaxTemperature(weatherInfo),
-                selectedCityName,
+                selectedCity.name,
                 weatherInfo.current.weather[0].main,
                 Utils().getDayTime(weatherInfo.current.dt)
             )
@@ -139,18 +135,18 @@ class MainActivity : DaggerAppCompatActivity() {
         weatherAdapter.notifyDataSetChanged()
 
         weatherAdapter.onItemClick = { daily ->
-            Log.d("Milad", daily.toString())
+            getWeatherInfo(selectedCity.coord.lat, selectedCity.coord.lon)
         }
     }
 
     private fun getMinMaxTemperature(weatherInfo: WeatherInfo) =
-        Utils().getTemperature(weatherInfo.daily[0].temp.min) + "/"+
+        Utils().getTemperature(weatherInfo.daily[0].temp.min) + "/" +
                 Utils().getTemperature(weatherInfo.daily[0].temp.max)
 
     private fun showNextHours(hours: List<Hourly>) {
         var i = 0
         for (hour in hours) {
-            if (i <  7) {
+            if (i < 7) {
                 val layout = NextHourWeatherLayout(this)
                 layout.setNextHourData(hour)
                 layoutWeatherNextHours.addView(layout)
