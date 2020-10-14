@@ -1,8 +1,8 @@
 package com.faridnia.weatherforcast.view
 
-import dagger.android.support.DaggerAppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -11,20 +11,22 @@ import androidx.recyclerview.widget.RecyclerView
 import com.faridnia.weatherforcast.R
 import com.faridnia.weatherforcast.R.drawable.*
 import com.faridnia.weatherforcast.model.DayTimes
-import com.faridnia.weatherforcast.model.WeatherConditions
 import com.faridnia.weatherforcast.model.onecallresponse.Daily
 import com.faridnia.weatherforcast.model.onecallresponse.Hourly
 import com.faridnia.weatherforcast.model.onecallresponse.WeatherInfo
 import com.faridnia.weatherforcast.util.Utils
 import com.faridnia.weatherforcast.viewmodel.ForecastResultViewModel
 import com.faridnia.weatherforcast.viewmodel.ForecastResultViewModelFactory
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.city_temp_info_layout.*
 import javax.inject.Inject
 
 class MainActivity : DaggerAppCompatActivity() {
 
-    private val selectedCityName: String = "Shahrud"
+    private var selectedCityName: String = "Tehran"
     private lateinit var weatherAdapter: WeatherForecastAdapter
 
     @Inject
@@ -32,18 +34,67 @@ class MainActivity : DaggerAppCompatActivity() {
 
     private lateinit var viewModel: ForecastResultViewModel
 
+    private val defaultCityLat = 51.421509
+    private val defaultCityLng = 35.694389
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_main)
 
         initViewModel()
+
+        getCityList()
+
+        getWeatherInfo(defaultCityLat, defaultCityLng)
 
         observeCityData()
 
         observeWeatherData()
 
-        viewModel.getWeatherInfo(55.01667, 36.416672)//TODO Sample Data Ḩeşār-e Sefīd
+        setCityClickListener()
 
+    }
+
+    private fun setCityClickListener() {
+        cityNameTextView.setOnClickListener {
+            showCityBottomSheet()
+        }
+    }
+    private val cityListAdapter = CityListAdapter(cityList = emptyList())
+
+    private fun showCityBottomSheet() {
+        val bottomSheetDialog = BottomSheetDialog(this@MainActivity)
+        val dialogSheetView: View = layoutInflater.inflate(R.layout.cities_bottomsheet, null)
+
+        bottomSheetDialog.apply {
+            setContentView(dialogSheetView)
+            show()
+            setCancelable(true)
+            setCanceledOnTouchOutside(true)
+            behavior.peekHeight = 700
+            behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            bottomSheetDialog.dismissWithAnimation = true
+        }
+
+        val citiesRecyclerView =
+            dialogSheetView.findViewById<View>(R.id.citiesRecyclerView) as RecyclerView
+        citiesRecyclerView.layoutManager = LinearLayoutManager(this)
+        citiesRecyclerView.adapter = cityListAdapter
+
+        cityListAdapter.onItemClick = { city ->
+            getWeatherInfo(city.coord.lat , city.coord.lon)
+            selectedCityName = city.name
+            bottomSheetDialog.dismiss()
+        }
+    }
+
+    private fun getCityList() {
+        viewModel.getCityList()
+    }
+
+    private fun getWeatherInfo(longitude: Double, latitude: Double) {
+        viewModel.getWeatherInfo(latitude, longitude)
     }
 
     private fun initViewModel() {
@@ -53,6 +104,7 @@ class MainActivity : DaggerAppCompatActivity() {
     private fun observeCityData() {
         viewModel.cityListLiveData.observe(this, Observer {
             Log.d("Milad", "Cities: $it")
+            cityListAdapter.update(it)
         })
     }
 
@@ -66,7 +118,7 @@ class MainActivity : DaggerAppCompatActivity() {
                 weatherInfo.current.temp,
                 getMinMaxTemperature(weatherInfo),
                 selectedCityName,
-                weatherInfo.current.weather[0].description,
+                weatherInfo.current.weather[0].main,
                 Utils().getDayTime(weatherInfo.current.dt)
             )
 

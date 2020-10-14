@@ -7,8 +7,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.faridnia.weatherforcast.R
-import com.faridnia.weatherforcast.model.DayTimes
-import com.faridnia.weatherforcast.model.WeatherConditions
 import com.faridnia.weatherforcast.model.onecallresponse.Daily
 import com.faridnia.weatherforcast.util.Utils
 import kotlinx.android.synthetic.main.city_temp_next_days_layout.view.*
@@ -41,14 +39,14 @@ class WeatherForecastAdapter(private var dailyList: List<Daily>) :
     }
 
     override fun onBindViewHolder(holder: WeatherInfoHolder, position: Int) {
-        holder.dayItemNameTextView.text = "Tomorow"
+        holder.dayItemNameTextView.text = "Tomorow" //TODO fix
         holder.dayItemMinMaxTempTextView.text =
             getMinMaxTemperature(dailyList[position].temp.min, dailyList[position].temp.max)
 
 
         holder.dayItemWeatherImageView.setImageResource(
             Utils().getRelatedWeatherImage(
-                dailyList[position].weather[0].description,
+                dailyList[position].weather[0].main,
                 Utils().getDayTime(dailyList[position].dt)
             )
         )

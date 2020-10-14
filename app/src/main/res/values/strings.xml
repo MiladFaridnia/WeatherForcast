@@ -2,4 +2,5 @@
     <string name="app_name">Weather Forcast</string>
     <string name="centigrade">C</string>
     <string name="weatherIcon">Weather</string>
+    <string name="choose_city">Choose City</string>
 </resources>
